@@ -4537,6 +4537,8 @@ func (kub *Kubectl) AddIPRoute(nodeName, subnet, gw string, replace bool) *CmdRe
 	}
 	cmd := fmt.Sprintf("ip route %s %s via %s", action, subnet, gw)
 
+	ginkgoext.By("!!! Adding route: %q", cmd)
+
 	res := kub.ExecInHostNetNS(context.TODO(), nodeName, cmd)
 
 	if !replace && res.GetExitCode() != 0 &&
@@ -4552,6 +4554,8 @@ func (kub *Kubectl) AddIPRoute(nodeName, subnet, gw string, replace bool) *CmdRe
 // node via the iproute2 utility suite.
 func (kub *Kubectl) DelIPRoute(nodeName, subnet, gw string) *CmdRes {
 	cmd := fmt.Sprintf("ip route del %s via %s", subnet, gw)
+
+	ginkgoext.By("!!! Removing route: %q", cmd)
 
 	return kub.ExecInHostNetNS(context.TODO(), nodeName, cmd)
 }
