@@ -165,18 +165,18 @@ jobs:
           done
 
       - name: Run tests
-        uses: cilium/little-vm-helper-action@9eb481cbe6a32bf74273106b315d43aeaa46a2ee
+        uses: cilium/little-vm-helper-action@d9ee79a392fcbb671c19d5c5d15c5c8843116536
         with:
           test-name: datapath-conformance
           image: kind
           image-version: '4.19'
           host-mount: ./
+          serial-port: 6666
           cmd: |
             set -eux
 
             cd /host/
 
-            exit 1
             ./contrib/scripts/kind.sh "" 3 "" "" "none"
             ./cilium-cli install --wait \
             --chart-directory=./install/kubernetes/cilium \
@@ -199,7 +199,7 @@ jobs:
 
       - name: Fetch artifacts
         if: ${{ !success() }}
-        uses: cilium/little-vm-helper-action@9eb481cbe6a32bf74273106b315d43aeaa46a2ee
+        uses: cilium/little-vm-helper-action@d9ee79a392fcbb671c19d5c5d15c5c8843116536
         with:
           provision: 'false'
           cmd: |
