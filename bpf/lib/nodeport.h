@@ -1107,7 +1107,8 @@ static __always_inline bool nodeport_uses_dsr4(const struct ipv4_ct_tuple *tuple
  * if function returns false.
  */
 static __always_inline bool snat_v4_needed(struct __ctx_buff *ctx, __be32 *addr,
-					   bool *from_endpoint __maybe_unused)
+					   bool *from_endpoint __maybe_unused,
+					   bool *egress_gateway __maybe_unused)
 {
 	void *data, *data_end;
 	struct iphdr *ip4;
@@ -1203,6 +1204,7 @@ static __always_inline bool snat_v4_needed(struct __ctx_buff *ctx, __be32 *addr,
 
 	*addr = egress_gw_policy->egress_ip;
 	*from_endpoint = true;
+	*egress_gateway = true;
 
 	return true;
 
@@ -1276,7 +1278,7 @@ static __always_inline int nodeport_nat_ipv4_fwd(struct __ctx_buff *ctx)
 	};
 	int ret = CTX_ACT_OK;
 
-	if (snat_v4_needed(ctx, &target.addr, &from_endpoint))
+	if (snat_v4_needed(ctx, &target.addr, &from_endpoint, &target.egress_gateway))
 		ret = snat_v4_nat(ctx, &target, from_endpoint);
 	if (ret == NAT_PUNT_TO_STACK)
 		ret = CTX_ACT_OK;
