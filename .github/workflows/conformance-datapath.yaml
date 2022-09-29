@@ -172,6 +172,7 @@ jobs:
           image-version: '4.19'
           host-mount: ./
           serial-port: 6666
+          lvh-version: 'pr_brb_dbg-serial'
           cmd: |
             set -eux
 
